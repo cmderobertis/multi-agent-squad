@@ -2,7 +2,10 @@
 
 ## 🚨 START HERE - IMMEDIATE ACTIONS
 
-When you (Claude) start in this directory, IMMEDIATELY do the following:
+When you (Claude) start in this directory:
+
+1. **Wait for user command** - The user will type `/project` or ask to start
+2. **When user types `/project` or "start project" or similar**, then IMMEDIATELY do the following:
 
 ### Step 1: Check Project Status
 ```bash

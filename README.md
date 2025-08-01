@@ -22,11 +22,13 @@ cd multi-agent-squad
 # 2. Start Claude Code
 claude
 
-# 3. Claude will guide you through setup!
-# Just answer the questions in plain English
+# 3. Start the orchestration with ONE of these commands:
+/project          # Recommended: Start project orchestration
+"Start project"   # Natural language also works
+"Help me set up"  # Any variation works
 ```
 
-That's it! Claude will handle everything else through conversation.
+The `/project` command triggers the complete orchestration setup!
 
 ## 🎯 How It Works
 
