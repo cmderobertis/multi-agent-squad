@@ -52,6 +52,19 @@ ASK THE USER THESE QUESTIONS IN ORDER:
    - Healthcare/HIPAA
    - None of the above
 
+6. **"What would you like me to automate for you?"**
+   - "What repetitive tasks do you do often?"
+   - "What do you sometimes forget to do?"
+   - "Do you need reminders for anything?"
+   - "Any quality checks you want automated?"
+   - Examples: running tests, formatting code, daily standups, progress tracking
+
+7. **"How much automation do you want?"**
+   - Minimal (just the essentials)
+   - Moderate (helpful automations)
+   - Maximum (automate everything possible)
+   - Let me suggest based on your project
+
 ### Step 3: Create Project Structure
 Based on the answers, CREATE:
 
@@ -118,26 +131,109 @@ Say to the user:
 
 What would you like to work on first?"
 
-## 🎭 Agent Orchestration
+## 🎭 Enterprise Agile Workflow (MUST FOLLOW)
 
-When orchestrating work:
+### IMPORTANT: Follow docs/AGILE_WORKFLOW.md for complete enterprise SDLC
 
-1. **For New Features:**
-   - Product Manager agent → Create requirements
-   - Architect agent → Design solution
-   - Engineer agents → Implement
-   - QA agent → Test
-   - Create PR → Review → Merge
+When orchestrating work, STRICTLY follow this process:
 
-2. **For Bug Fixes:**
-   - Identify issue
-   - Assign to appropriate engineer
-   - Fix → Test → Review → Merge
+### 1. **Feature Development Cycle**
+```
+1. IDEATION & DISCOVERY
+   - PM Agent: Market research & feasibility
+   - Architect: Technical feasibility
+   - ❓ HUMAN CHECKPOINT: "Is this feature approved by stakeholders?"
 
-3. **For Documentation:**
-   - Technical Writer → Create docs
-   - Reviewer → Review and improve
-   - Publish
+2. REQUIREMENTS
+   - PM Agent: Create comprehensive PRD
+   - QA Agent: Define acceptance criteria
+   - ❓ HUMAN CHECKPOINT: "Product Owner, do you approve these requirements?"
+
+3. SPRINT PLANNING
+   - Break into user stories
+   - Estimate story points
+   - ❓ HUMAN CHECKPOINT: "Team, do we commit to this sprint?"
+
+4. DESIGN & ARCHITECTURE
+   - Architect: System design
+   - Security: Security review
+   - ❓ HUMAN CHECKPOINT: "Architect, is this design approved?"
+
+5. DEVELOPMENT
+   - Create feature branch/worktree
+   - TDD: Write tests first
+   - Implement feature
+   - Daily standups
+
+6. CODE REVIEW CYCLE
+   - Submit PR
+   - Automated checks (linting, tests, security)
+   - Agent reviews (Senior Engineer, Security)
+   - ❓ HUMAN CHECKPOINT: "Senior Dev, complex changes need your review"
+   
+   IF COMMENTS:
+     - Address each comment
+     - Push fixes
+     - Request re-review
+     - REPEAT until approved
+
+7. TESTING
+   - Unit tests (>80% coverage)
+   - Integration tests
+   - Performance tests
+   - ❓ HUMAN CHECKPOINT: "QA Lead, please approve test results"
+
+8. UAT
+   - Deploy to staging
+   - ❓ HUMAN CHECKPOINT: "Product Owner, does this meet requirements?"
+   
+   IF NOT APPROVED:
+     - Back to development OR
+     - Back to requirements (if fundamental issue)
+
+9. DEPLOYMENT
+   - ❓ HUMAN CHECKPOINT: "Ops team, approve deployment?"
+   - Blue-green deployment
+   - Monitor metrics
+   - ❓ HUMAN CHECKPOINT: "All metrics normal? Proceed with full rollout?"
+
+10. RETROSPECTIVE
+    - What went well?
+    - What needs improvement?
+    - Action items for next sprint
+```
+
+### 2. **Review Comment Resolution (MANDATORY)**
+```
+For EVERY review comment:
+1. Developer agent reads comment
+2. Implements fix
+3. Responds with explanation
+4. Pushes changes
+5. Tags reviewer for re-review
+6. WAIT for approval before proceeding
+```
+
+### 3. **Quality Gates (CANNOT SKIP)**
+Before moving to next phase, ALL must be checked:
+- [ ] All tests passing
+- [ ] Code coverage > 80%
+- [ ] No security vulnerabilities
+- [ ] Performance benchmarks met
+- [ ] Documentation updated
+- [ ] Human approvals received
+
+### 4. **Daily Routines**
+```
+EVERY DAY at 9 AM:
+- Generate standup report
+- Check for blocked PRs
+- ❓ ASK HUMAN: "Any blockers need attention?"
+
+EVERY FRIDAY:
+- Sprint progress report
+- ❓ ASK HUMAN: "Ready for sprint review?"
+```
 
 ## 🔧 Available Agents
 

@@ -116,6 +116,14 @@ Just talk to Claude normally:
 - "Create API documentation"
 - "Review our architecture"
 
+### Intelligent Automation (Hooks)
+Tell Claude what you want automated:
+- **"I forget to run tests"** → Auto-runs tests for you
+- **"Remind me of daily standups"** → 9 AM reminders
+- **"Check my writing for errors"** → Auto grammar check
+- **"Track my progress"** → Automatic progress logs
+- Hooks are created based on YOUR needs, not pre-configured
+
 ### Adaptive Project Management
 - **GitHub Integration** - Automatic issue creation and PR management
 - **Jira Integration** - Story tracking and updates

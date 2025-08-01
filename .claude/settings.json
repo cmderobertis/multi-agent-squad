@@ -1,0 +1,105 @@
+{
+  "hooks": {
+    "preToolUse": [
+      {
+        "match": {
+          "tool": "Write"
+        },
+        "command": "bash -c 'echo \"🔍 Pre-write validation: Checking if tests exist for this file...\" && if [[ \"$CLAUDE_FILE_PATH\" == *.py ]] && [[ ! -f \"tests/test_$(basename $CLAUDE_FILE_PATH)\" ]]; then echo \"⚠️  WARNING: No test file found. Remember TDD - write tests first!\"; fi'"
+      },
+      {
+        "match": {
+          "tool": "Bash",
+          "args": "git commit"
+        },
+        "command": "bash -c 'echo \"🚨 HUMAN CHECKPOINT: Have all review comments been addressed? Type yes to continue:\" && read response && [[ \"$response\" == \"yes\" ]] || exit 1'"
+      },
+      {
+        "match": {
+          "tool": "Bash",
+          "args": "git push"
+        },
+        "command": "bash -c 'echo \"📊 Running quality gates before push...\" && ./scripts/workflow-automation.sh check_pr_ready || (echo \"❌ Quality gates failed. Fix issues before pushing.\" && exit 1)'"
+      }
+    ],
+    "postToolUse": [
+      {
+        "match": {
+          "tool": "Write",
+          "args": "*.md"
+        },
+        "command": "bash -c 'echo \"📝 Documentation updated. Notifying technical writer for review.\"'"
+      },
+      {
+        "match": {
+          "tool": "MultiEdit"
+        },
+        "command": "bash -c 'echo \"🔄 Code changes detected. Creating review checkpoint...\" && echo \"$(date): Code modified in $CLAUDE_FILE_PATH\" >> .review-log'"
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "match": {
+          "content": "start.*feature|create.*feature|new.*feature"
+        },
+        "command": "bash -c 'echo \"🏃 Starting new feature workflow. Initiating requirements phase...\" && ./scripts/sprint-management.sh status'"
+      },
+      {
+        "match": {
+          "content": "deploy|release|production"
+        },
+        "command": "bash -c 'echo \"🚨 DEPLOYMENT CHECKPOINT: Have all quality gates passed?\" && echo \"- [ ] All tests passing\" && echo \"- [ ] Code coverage > 80%\" && echo \"- [ ] Security scan clean\" && echo \"- [ ] Performance benchmarks met\" && echo \"- [ ] UAT approved\"'"
+      }
+    ],
+    "notification": [
+      {
+        "match": {
+          "type": "daily",
+          "time": "09:00"
+        },
+        "command": "bash -c './scripts/sprint-management.sh standup && echo \"📅 Daily standup complete. Any blockers?\"'"
+      },
+      {
+        "match": {
+          "type": "weekly",
+          "dayOfWeek": "friday",
+          "time": "15:00"
+        },
+        "command": "bash -c 'echo \"📊 Weekly Sprint Status\" && ./scripts/sprint-management.sh status && echo \"Ready for sprint review? (Run: sprint-management.sh review)\"'"
+      }
+    ],
+    "subagentStop": [
+      {
+        "match": {
+          "agent": "qa-engineer"
+        },
+        "command": "bash -c 'echo \"✅ QA Agent completed testing. Results logged to test-reports/\"'"
+      },
+      {
+        "match": {
+          "agent": "product-manager"
+        },
+        "command": "bash -c 'echo \"📋 PM Agent completed requirements. HUMAN CHECKPOINT: Please review and approve the PRD.\"'"
+      }
+    ]
+  },
+  "workflowEnforcement": {
+    "requireReviewBeforeMerge": true,
+    "minimumReviewers": 2,
+    "requireTestsBeforeCommit": true,
+    "blockDirectPushToMain": true,
+    "enforceConventionalCommits": true
+  },
+  "automatedReminders": {
+    "dailyStandup": "09:00",
+    "weeklyReview": "friday 15:00",
+    "prReviewCheck": "every 4 hours",
+    "staleIssueCheck": "daily"
+  },
+  "qualityGates": {
+    "testCoverage": 80,
+    "lintingRequired": true,
+    "securityScanRequired": true,
+    "performanceBenchmark": true
+  }
+}
