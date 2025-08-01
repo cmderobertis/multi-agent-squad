@@ -4,13 +4,44 @@ An intelligent orchestration system for Claude Code that adapts to your project 
 
 ## 🌟 Overview
 
-Multi-Agent Squad transforms Claude Code into a complete software development team. Simply start Claude in this directory, and it will:
+Multi-Agent Squad transforms Claude Code into a complete software development team with enterprise-grade integrations. Simply start Claude in this directory, and it will:
 
 1. **Ask you about your project** through natural conversation
 2. **Create the perfect structure** based on your needs
 3. **Set up specialized agents** for your project type
-4. **Orchestrate development** through the entire lifecycle
-5. **Integrate with your tools** (GitHub, Jira, etc.)
+4. **Configure integrations** with 30+ popular tools
+5. **Enable MCP servers** for enhanced AI capabilities
+6. **Orchestrate development** through the entire lifecycle
+7. **Automate workflows** based on your specific needs
+
+### 🎯 Complete System Architecture
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    MULTI-AGENT SQUAD                         │
+│                                                              │
+│  ┌──────────────────┐    ┌─────────────────────┐    │
+│  │   AI AGENTS      │    │   INTEGRATIONS     │    │
+│  │                  │    │                    │    │
+│  │ • Orchestrator   │    │ • Slack/Teams     │    │
+│  │ • Product Mgr    │    │ • Jira/Linear     │    │
+│  │ • Architect      │    │ • GitHub/GitLab   │    │
+│  │ • Engineers      │    │ • CI/CD Tools     │    │
+│  │ • QA/DevOps      │    │ • Monitoring      │    │
+│  └──────────────────┘    └─────────────────────┘    │
+│                                                              │
+│  ┌──────────────────┐    ┌─────────────────────┐    │
+│  │   MCP SERVERS    │    │   AUTOMATION       │    │
+│  │                  │    │                    │    │
+│  │ • Database       │    │ • Claude Hooks    │    │
+│  │ • GitHub API     │    │ • Git Hooks       │    │
+│  │ • Memory         │    │ • Sprint Mgmt     │    │
+│  │ • Analytics      │    │ • PR Reviews      │    │
+│  │ • Docker/K8s     │    │ • Quality Gates   │    │
+│  └──────────────────┘    └─────────────────────┘    │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
 
 ## 🚀 Quick Start
 
@@ -30,19 +61,32 @@ claude
 
 The `/project` command triggers the complete orchestration setup!
 
+### 🌟 What You Get
+
+After setup, you'll have:
+- **🤖 Specialized AI agents** tailored to your project
+- **🔌 Configured integrations** with your existing tools
+- **🚀 MCP servers** for enhanced capabilities
+- **🦝 Automated workflows** based on your needs
+- **📊 Sprint management** with review cycles
+- **🔔 Smart notifications** where you want them
+- **🔐 Security checks** and quality gates
+
 ## 🎯 How It Works
 
 ### First Time Setup
 
-When you start Claude, it will ask you:
+When you start Claude with `/project`, it will guide you through:
 
 1. **"What are you building?"** - Describe your project
 2. **"Is this new or existing?"** - It adapts accordingly  
 3. **"Monorepo or multi-repo?"** - Your choice
-4. **"How do you track tasks?"** - GitHub, Jira, or manual
-5. **"Where should docs go?"** - Flexible documentation
+4. **"How do you track tasks?"** - GitHub, Jira, Linear, or manual
+5. **"What would you like to automate?"** - Custom hooks for your needs
+6. **"Which integrations?"** - Slack, email, Teams, and more
+7. **"Enable MCP servers?"** - Enhanced AI capabilities
 
-Claude then creates the perfect structure for YOUR project.
+Claude then creates the perfect structure, integrations, and automations for YOUR project.
 
 ### Flexible Structure Examples
 
@@ -109,6 +153,13 @@ Based on your project, Claude will suggest relevant agents:
 
 ## 🛠️ Key Features
 
+### 🤖 Enterprise Agile Workflow
+- **Sprint Management** - Automated ceremonies and tracking
+- **PR Review Cycles** - Enforced code review with comment resolution
+- **Quality Gates** - Automated checks before phase transitions
+- **Human Checkpoints** - Critical decisions require approval
+- **Daily Standups** - Automated reminders and reports
+
 ### Natural Language Control
 Just talk to Claude normally:
 - "I need to add user authentication"
@@ -116,31 +167,68 @@ Just talk to Claude normally:
 - "Create API documentation"
 - "Review our architecture"
 
-### Intelligent Automation (Hooks)
+### Intelligent Automation (Claude Code Hooks)
 Tell Claude what you want automated:
-- **"I forget to run tests"** → Auto-runs tests for you
-- **"Remind me of daily standups"** → 9 AM reminders
-- **"Check my writing for errors"** → Auto grammar check
-- **"Track my progress"** → Automatic progress logs
-- Hooks are created based on YOUR needs, not pre-configured
+- **"I forget to run tests"** → Auto-runs tests after file changes
+- **"Remind me of daily standups"** → 9 AM Slack/email reminders
+- **"Check code quality"** → Auto-lint and format on save
+- **"Track my progress"** → Automatic time tracking and reports
+- **"Security checks"** → Scan for secrets before commits
+- **"Break reminders"** → Health reminders every hour
 
-### Extensive Integrations
-- **Project Management** - GitHub, Jira, Linear, Azure DevOps, ClickUp
-- **Communication** - Slack, Teams, Discord, Email notifications
-- **Documentation** - Confluence, Notion, GitHub Wiki
+Hooks are dynamically generated based on YOUR specific needs using:
+```bash
+python scripts/generate-hooks.py
+```
+
+### 🔌 Extensive Integrations (30+ Tools)
+
+#### Project Management
+- **GitHub** - Issues, PRs, Projects, Actions
+- **Jira** - Sprints, epics, stories, burndown charts
+- **Linear** - Modern issue tracking with cycles
+- **Azure DevOps** - Boards, repos, pipelines
+- **ClickUp, Monday.com, Asana** - Visual project management
+
+#### Communication
+- **Slack** - Real-time notifications, daily summaries, thread management
+- **Microsoft Teams** - Adaptive cards, channel updates
+- **Discord** - Webhooks, embeds for communities
+- **Email** - HTML/plain text, daily digests, critical alerts
+
+#### Development & DevOps
 - **CI/CD** - GitHub Actions, Jenkins, GitLab CI, CircleCI
 - **Monitoring** - Sentry, Datadog, Prometheus, New Relic
-- **Testing** - BrowserStack, SonarQube, Cypress
+- **Testing** - BrowserStack, SonarQube, Cypress Dashboard
+- **Documentation** - Confluence, Notion, GitHub Wiki
 - **Time Tracking** - Toggl, Harvest, Clockify
 
-### MCP Server Support
-Extend Claude's capabilities with Model Context Protocol servers:
-- **Database Explorer** - Query and explore PostgreSQL databases
-- **Advanced GitHub** - Deep integration beyond CLI
-- **Memory Server** - Persistent context across sessions
+### 🚀 MCP (Model Context Protocol) Server Support
+
+Extend Claude's capabilities with 14+ pre-configured MCP servers:
+
+#### Data & Storage
+- **PostgreSQL Explorer** - Natural language database queries
+- **Memory Server** - Persistent context across Claude sessions
+- **Enhanced Filesystem** - Advanced file operations with permissions
+
+#### Development Tools  
+- **GitHub Integration** - Deep PR and issue management
 - **Test Runner** - Execute and monitor test suites
-- **Container Management** - Docker and Kubernetes control
-- **Custom Servers** - Create your own for proprietary tools
+- **Docker Management** - Container and image control
+- **Kubernetes** - Deployment and pod management
+
+#### Communication & Docs
+- **Slack Server** - Read channels, send messages
+- **Linear Server** - Full issue tracking integration
+- **Notion Server** - Access pages and databases
+- **Confluence Server** - Documentation management
+
+#### Analytics & Monitoring
+- **Project Analytics** - Custom metrics and insights
+- **Monitoring Integration** - Datadog, Prometheus access
+
+Setup with: `python scripts/mcp-server-setup.py`
 
 ### Smart Development Workflow
 1. **Requirements** → PM agent creates specs
@@ -176,42 +264,103 @@ Unlike other tools, Multi-Agent Squad:
 
 Claude will check what you have and work with it!
 
+## 🔧 Available Scripts & Tools
+
+### Core Orchestration
+- **`/project`** - Main entry point to start orchestration
+- **`worktree-manager.sh`** - Git worktree management for multi-repo
+- **`discover-project.py`** - Analyze existing codebases
+
+### Integration Scripts
+- **`integration-setup.py`** - Universal integration manager
+- **`mcp-server-setup.py`** - MCP server configuration
+- **`agile-tools-setup.py`** - Agile tool integrations
+- **`slack-integration.py`** - Slack webhook setup
+- **`email-integration.py`** - Email notification setup
+- **`github-integration.py`** - GitHub API automation
+
+### Workflow Automation
+- **`sprint-management.sh`** - Sprint ceremonies and tracking
+- **`pr-review-cycle.sh`** - Automated PR review enforcement
+- **`generate-hooks.py`** - Dynamic hook generation
+- **`setup-git-hooks.sh`** - Git hook configuration
+
 ## 🎯 Example Workflows
 
 ### Starting a New SaaS Product
 ```
-You: "I want to build a SaaS product for team collaboration"
-Claude: "Great! Is this a new project?"
-You: "Yes, brand new"
-Claude: "Will you use separate repos for frontend and backend?"
-You: "Yes, we prefer separate repos"
-Claude: [Creates structure, suggests agents, begins planning]
+You: "/project"
+Claude: "Hello! I'm your Multi-Agent Squad Orchestrator. What are you building?"
+You: "A SaaS product for team collaboration"
+Claude: "Great! Is this a new project or existing code?"
+You: "Brand new"
+Claude: "How would you like to organize your code?"
+[Shows options: monorepo, multi-repo, etc.]
+You: "Multi-repo - separate frontend and backend"
+Claude: "What would you like me to automate for you?"
+You: "I often forget to run tests"
+Claude: [Creates structure, agents, test automation hooks]
 ```
 
-### Organizing an Existing Project
+### Setting Up Integrations
 ```
-You: "I have a messy React app that needs organization"
-Claude: "I'll help! Where is your code currently?"
-You: "Everything is in a src folder"
-Claude: "Is this just frontend or do you have backend too?"
-You: [Continues with reorganization]
-```
-
-### Documentation Project
-```
-You: "We need to document our API"
-Claude: "I'll set up a documentation project. Do you have existing docs?"
-You: "Some scattered markdown files"
-Claude: [Creates doc structure, organizes existing content]
+You: "Set up Slack notifications for builds"
+Claude: "I'll help you set up Slack integration. Running the setup..."
+[Interactive setup with permissions]
+Claude: "Would you like notifications for:
+  a) Build status
+  b) Test results  
+  c) Daily standup reminders
+  d) PR reviews"
+You: "All of them"
+Claude: [Configures Slack with all requested notifications]
 ```
 
-## 🤝 Integration Options
+### Using MCP Servers
+```
+You: "Show me all users in our database"
+Claude: [Uses PostgreSQL MCP server]
+"Here are the users in your database:
+- alice@example.com (Admin)
+- bob@example.com (User)
+- charlie@example.com (User)"
+
+You: "What's our test coverage?"
+Claude: [Uses Analytics MCP server]
+"Current test coverage: 78%
+- Frontend: 82%
+- Backend: 74%
+Trend: +3% this week"
+```
+
+## 🎆 What Makes This Different?
+
+### 🧠 True AI Orchestration
+Unlike simple templates or scripts, Multi-Agent Squad uses Claude's intelligence to:
+- **Understand your project** contextually, not through rigid configs
+- **Adapt to your workflow** instead of forcing you into one
+- **Learn your preferences** and adjust automation accordingly
+- **Make intelligent decisions** while keeping you in control
+
+### 🔗 Native Claude Code Integration
+- **Built for Claude Code** - Not a generic framework
+- **Uses sub-agents** - Real AI delegation, not just prompts
+- **MCP Protocol** - Direct tool access, not API wrappers
+- **Claude Hooks** - Deep integration with your workflow
+
+### 🎯 Zero Configuration Philosophy
+- **No YAML files** - Just conversation
+- **No setup wizards** - Claude asks what it needs
+- **No dependencies** - Works with what you have
+- **No lock-in** - Your project, your way
+
+## 🤝 Integration Setup
 
 Multi-Agent Squad supports 30+ integrations across all aspects of agile development:
 
-### Quick Integration Setup
+### Quick Setup Commands
 ```bash
-# Interactive integration setup
+# Interactive integration setup (recommended)
 python scripts/integration-setup.py
 
 # Set up MCP servers for enhanced capabilities
@@ -219,30 +368,31 @@ python scripts/mcp-server-setup.py
 
 # Configure specific agile tools
 python scripts/agile-tools-setup.py
+
+# Individual integrations
+python scripts/slack-integration.py      # Slack notifications
+python scripts/email-integration.py      # Email alerts
+python scripts/github-integration.py     # GitHub automation
 ```
 
-### Popular Integrations
+### Integration Categories
+- **📋 Project Management** - GitHub, Jira, Linear, Azure DevOps, ClickUp
+- **💬 Communication** - Slack, Teams, Discord, Email
+- **📄 Documentation** - Confluence, Notion, GitHub Wiki  
+- **🚀 CI/CD** - GitHub Actions, Jenkins, GitLab CI
+- **📊 Monitoring** - Sentry, Datadog, Prometheus
+- **🧪 Testing** - BrowserStack, SonarQube, Cypress
+- **⏱️ Time Tracking** - Toggl, Harvest, Clockify
 
-#### Project Management
-- **GitHub** - Issues, PRs, Projects (via `gh` CLI)
-- **Jira** - Full sprint and epic management
-- **Linear** - Modern issue tracking
-- **Azure DevOps** - Enterprise agile tools
-
-#### Communication
-- **Slack** - Real-time notifications and updates
-- **Microsoft Teams** - Enterprise communication
-- **Email** - Digests and critical alerts
-
-#### Development Tools
-- **MCP Servers** - Direct database access, enhanced file operations
-- **CI/CD** - GitHub Actions, Jenkins, GitLab CI
-- **Monitoring** - Sentry, Datadog, Prometheus
-- **Testing** - Automated test runners, quality gates
-
-See [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md) for the complete list and setup instructions.
+See [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md) for complete setup instructions.
 
 ## 📚 Advanced Features
+
+### 🔐 Security & Permissions
+- **Credential Management** - Secure storage in `.env.*` files
+- **Permission Scoping** - Minimal required access
+- **Secret Detection** - Pre-commit hooks for security
+- **MCP Server Security** - Warnings for internet-accessing servers
 
 ### Custom Agent Creation
 ```
@@ -291,11 +441,31 @@ Multi-Agent Squad believes in:
 
 ## 🚦 Getting Help
 
-Just ask Claude:
+### Ask Claude
 - "How do I add a new feature?"
 - "What agents do I have?"
 - "Show me the project status"
-- "Help me with deployment"
+- "Help me set up Slack notifications"
+- "Configure MCP servers for my database"
+- "Create a custom automation hook"
+
+### Check Documentation
+- **[INTEGRATIONS.md](docs/INTEGRATIONS.md)** - Complete integration guide
+- **[AGILE_WORKFLOW.md](docs/AGILE_WORKFLOW.md)** - Enterprise workflow details
+- **[HOOKS_GUIDE.md](docs/HOOKS_GUIDE.md)** - Automation hook reference
+- **[AGENT_GUIDELINES.md](docs/AGENT_GUIDELINES.md)** - Agent creation guide
+
+### Quick Commands
+```bash
+# List available integrations
+python scripts/integration-setup.py
+
+# Check MCP server status
+python scripts/mcp-server-setup.py check
+
+# View configured tools
+python scripts/agile-tools-setup.py list
+```
 
 ## 📄 License
 
