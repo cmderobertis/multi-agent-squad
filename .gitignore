@@ -1,21 +1,15 @@
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Editor files
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Environment
-.env
-.env.local
+# Logs
+*.log
 
-# Claude specific
-.claude/
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
+# Don't ignore project directories, but they'll manage their own git repos
+# Each project in projects/ is its own git repository

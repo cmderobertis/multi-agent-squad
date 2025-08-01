@@ -1,99 +1,173 @@
-# Multi-Agent Squad
+# Claude Code Agent Generator
 
-A comprehensive collection of specialized AI agents designed to orchestrate and accelerate complex software development projects using Claude Code.
+A focused system for generating project-specific Claude Code agents based on your project's needs.
 
 ## Overview
 
-Multi-Agent Squad provides 10 specialized agents that work together to handle every aspect of software development - from initial requirements to deployment. Each agent has deep expertise in their domain and can collaborate seamlessly with others.
+This tool helps you create specialized agents for Claude Code that understand your project's context, technology stack, and specific requirements. Instead of generic agents, you get tailored assistants that follow your coding standards and practices.
 
 ## Quick Start
 
-These agents are designed to work with Claude Code. Simply describe your project or task, and the appropriate agents will be engaged automatically.
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd multi-agent-squad
+   ```
 
-```bash
-# Example: Starting a new project
-"I need to build a real-time collaboration platform similar to Figma"
+2. **Describe your project**
+   Edit `PROJECT.md` with your project details:
+   ```bash
+   # Edit the project description
+   edit PROJECT.md
+   ```
 
-# The Prime Orchestrator will coordinate:
-# 1. Product Strategy Lead → Creates PRD
-# 2. System Design Architect → Designs architecture  
-# 3. Technical Program Manager → Plans implementation
-# 4. Engineering agents → Build the solution
-# 5. Quality & Security → Review and validate
-```
+3. **Generate agents**
+   ```bash
+   python scripts/generate-agents.py
+   ```
 
-## Available Agents
-
-### 🎯 Orchestration
-- **prime-orchestrator** - Coordinates complex projects and manages agent collaboration
-
-### 🏗️ Architecture
-- **system-design-architect** - Designs scalable system architectures
-- **security-compliance-architect** - Ensures security and compliance requirements
-
-### 💻 Engineering  
-- **technical-lead-engineer** - Maintains code quality and technical standards
-- **principal-engineer** - Solves complex technical challenges
-- **data-platform-engineer** - Designs data architectures and pipelines
-
-### 📊 Management
-- **technical-program-manager** - Manages project timelines and resources
-- **product-strategy-lead** - Defines product vision and requirements
-
-### ✅ Quality
-- **quality-reliability-engineer** - Ensures quality through testing and reliability practices
-
-### 🔌 Integration
-- **platform-integration-lead** - Handles API design and system integration
+4. **Use your agents**
+   - Find generated agents in `.claude/agents/`
+   - Copy agent content to start a Claude Code session
+   - Each agent is specialized for specific tasks
 
 ## How It Works
 
-1. **Natural Language** - Describe your project or problem in plain English
-2. **Automatic Orchestration** - The Prime Orchestrator identifies needed agents
-3. **Collaborative Execution** - Agents work together, sharing context and deliverables
-4. **End-to-End Delivery** - From requirements to deployed, tested code
+### 1. Project Description
+Fill out `PROJECT.md` with:
+- Project name and type
+- Technology stack
+- Development workflow
+- Current challenges
+- Required agent types
 
-## Example Workflow
+### 2. Agent Generation
+The generator:
+- Parses your project information
+- Asks clarifying questions
+- Determines needed agents
+- Creates specialized agents from templates
+
+### 3. Agent Usage
+Generated agents include:
+- Clear role definitions
+- Project-specific context
+- Relevant guidelines
+- Best practices for your stack
+
+## Available Templates
+
+### Developer Agents
+- `developer.md` - Generic developer template
+- `python-developer.md` - Python-specific development
+- `javascript-developer.md` - JavaScript/TypeScript development
+
+### Specialized Agents
+- `architect.md` - System design and architecture
+- `tester.md` - Testing and quality assurance
+- `reviewer.md` - Code review and quality checks
+
+### Generic Template
+- `generic.md` - Base template for custom agents
+
+## Project Structure
 
 ```
-User: "Build an authentication system with OAuth support"
-
-Prime Orchestrator coordinates:
-├── Product Strategy Lead
-│   └── Creates auth system requirements
-├── Security Architect  
-│   └── Designs secure auth architecture
-├── System Architect
-│   └── Creates system design
-├── Technical Lead
-│   └── Sets coding standards
-├── Principal Engineer
-│   └── Implements core auth logic
-├── Integration Lead
-│   └── Designs OAuth APIs
-└── Quality Engineer
-    └── Creates test suite
+.
+├── PROJECT.md              # Your project description
+├── scripts/
+│   └── generate-agents.py  # Agent generator script
+├── templates/              # Agent templates
+│   ├── developer.md
+│   ├── architect.md
+│   ├── tester.md
+│   └── ...
+├── .claude/
+│   └── agents/            # Generated agents (Claude Code native)
+└── docs/
+    └── AGENT_GUIDELINES.md # Guide for creating effective agents
 ```
 
-## Agent Collaboration
+## Creating Custom Templates
 
-Agents automatically collaborate on complex tasks:
-- Share context and deliverables
-- Review each other's work
-- Resolve conflicts through the Prime Orchestrator
-- Maintain consistency across the project
+1. Add new templates to `templates/` directory
+2. Use placeholders:
+   - `{{PROJECT_NAME}}` - Project name
+   - `{{PROJECT_TYPE}}` - Project type
+   - `{{LANGUAGE}}` - Primary language
+   - `{{FRAMEWORK}}` - Framework
+   - `{{AGENT_NAME}}` - Generated agent name
+
+3. Follow the structure:
+   - Role definition
+   - Project context
+   - Core responsibilities
+   - Guidelines and best practices
 
 ## Best Practices
 
-- **Start with the big picture** - Let the Prime Orchestrator break down complex projects
-- **Trust agent expertise** - Each agent is specialized in their domain
-- **Iterate naturally** - Agents will refine and improve solutions
-- **Review outputs** - While agents are thorough, always review critical decisions
+### For Project Description
+- Be specific about your tech stack
+- List actual challenges you face
+- Check all applicable agent requirements
+- Include your coding standards
 
-## Philosophy
+### For Agent Usage
+- Use one agent per task type
+- Keep agents focused on their role
+- Update agents as project evolves
+- Combine agents for complex tasks
 
-Multi-Agent Squad believes that great software emerges from coordinated expertise. By combining specialized agents with intelligent orchestration, we can tackle projects of any complexity while maintaining quality, security, and scalability.
+## Examples
+
+### Example: Web Application Project
+```markdown
+# PROJECT.md
+Project Name: E-commerce Platform
+Project Type: Web Application
+Primary Language: Python
+Framework: Django + React
+...
+```
+
+Generated agents:
+- `ecommerce-platform-python-developer.md`
+- `ecommerce-platform-architect.md`
+- `ecommerce-platform-tester.md`
+
+### Example: API Service Project
+```markdown
+# PROJECT.md
+Project Name: Payment API
+Project Type: API Service
+Primary Language: Node.js
+Framework: Express
+...
+```
+
+Generated agents:
+- `payment-api-javascript-developer.md`
+- `payment-api-api-designer.md`
+- `payment-api-security.md`
+
+## Tips for Effective Agents
+
+1. **Keep agents focused** - One role per agent
+2. **Include context** - Project-specific information
+3. **Be prescriptive** - Clear dos and don'ts
+4. **Update regularly** - As project evolves
+
+## Contributing
+
+To add new agent templates:
+1. Create template in `templates/`
+2. Update generator mappings in `generate-agents.py`
+3. Document in guidelines
 
 ## License
 
-MIT License - See LICENSE file for details
+[Your license here]
+
+---
+
+**Note**: This tool is designed specifically for Claude Code's native agent system. Place generated agents in `.claude/agents/` for Claude Code to recognize them.
