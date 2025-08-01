@@ -58,6 +58,13 @@ ASK THE USER THESE QUESTIONS IN ORDER:
    - "Do you need reminders for anything?"
    - "Any quality checks you want automated?"
    - Examples: running tests, formatting code, daily standups, progress tracking
+   
+   Common automation needs:
+   - **Development**: Auto-format, test on save, lint checks
+   - **Project Management**: Daily standups, sprint updates, PR reminders
+   - **Quality**: Code coverage, security scans, performance checks
+   - **Communication**: Status updates, deployment notifications
+   - **Time Management**: Break reminders, time tracking, EOD summaries
 
 7. **"How much automation do you want?"**
    - Minimal (just the essentials)
@@ -82,8 +89,99 @@ mkdir -p docs/{architecture,guides,api,tutorials}
 mkdir -p .claude/agents
 ```
 
-### Step 4: Generate PROJECT.md
-Create PROJECT.md with the user's answers:
+### Step 4: Epic/Requirements Gathering
+ASK THE USER with keyboard options:
+
+**"How would you like to provide project requirements/epics?"**
+
+a) I have epics in a docs folder
+b) I have them in Jira/GitHub Issues  
+c) I'll provide a link/API endpoint
+d) Let's create them together now
+e) Skip epics for now
+
+Press a, b, c, d, or e:
+
+Based on selection:
+- a) "Which folder contains your requirements? I'll read them now."
+- b) "Great! I'll fetch them from your configured integration."
+- c) "Please provide the URL/endpoint and any auth details needed."
+- d) "Let's define your project epics. What's the first major feature?"
+- e) "No problem, we can add requirements later as we go."
+
+### Step 5: Integration Setup (Optional)
+ASK THE USER:
+
+**"Would you like to set up any integrations?"**
+
+a) Communication (Slack, Teams, Discord)
+b) Project Management (Jira, Linear, GitHub)  
+c) Documentation (Notion, Confluence)
+d) MCP Servers (Advanced AI capabilities)
+e) All recommended integrations
+f) Let me choose specific tools
+g) Skip for now
+
+Press a, b, c, d, e, f, or g:
+
+Based on selection:
+- a-d) Run specific category setup
+- e) Set up recommended tools for agile development
+- f) Show full list of available integrations
+
+```bash
+# Run the appropriate setup:
+python scripts/integration-setup.py  # For general integrations
+python scripts/mcp-server-setup.py  # For MCP servers
+python scripts/agile-tools-setup.py # For agile tools
+```
+
+### MCP Servers (If selected)
+MCP (Model Context Protocol) servers give Claude enhanced capabilities:
+- **Database Explorer** - Query and explore your database
+- **GitHub Integration** - Advanced PR and issue management
+- **Memory Server** - Remember context across sessions
+- **Test Runner** - Execute and monitor tests
+- **Docker/K8s** - Container management
+- **Analytics** - Project metrics and insights
+
+### Step 6: Planning Approval
+ALWAYS ASK before proceeding:
+
+**"Here's my plan for setting up your project:"**
+
+```
+📋 PROJECT SETUP PLAN
+━━━━━━━━━━━━━━━━━━━━
+
+1. Structure:
+   - Project type: [monorepo/multi-repo]
+   - Directory layout: [show planned structure]
+   
+2. Agents:
+   - [List of agents to be created]
+   
+3. Automation:
+   - Git hooks: [if applicable]
+   - Claude hooks: [list planned hooks]
+   
+4. Integrations:
+   - [List configured integrations]
+   
+5. First Steps:
+   - [Initial tasks to perform]
+```
+
+**"Does this look good? Should I proceed with this setup?"**
+
+a) Yes, looks perfect! Let's go!
+b) Let me modify something first
+c) Start over with different options
+
+Press a, b, or c:
+
+### Step 7: Generate PROJECT.md
+Only AFTER user approval, create PROJECT.md with all confirmed details:
 
 ```markdown
 # Project Configuration
@@ -122,12 +220,28 @@ Based on project type, activate these agents:
 - Use `Task` to create technical-writer agent
 - Use `Task` to create documentation-reviewer agent
 
-### Step 6: Begin Orchestration
+### Step 8: Notification Preferences
+ASK THE USER:
+
+**"When should I notify you about important events?"**
+```
+a) Every major decision point
+b) Only critical issues
+c) Daily summary only
+d) Real-time everything
+e) Let me customize
+
+Press a, b, c, d, or e:
+```
+
+### Step 10: Begin Orchestration
 Say to the user:
 "✅ Project setup complete! I've created:
 - Your project structure
 - Specialized agents for your project
 - PROJECT.md configuration
+- Integration settings
+- Notification preferences
 
 What would you like to work on first?"
 
@@ -271,6 +385,33 @@ Use the Task tool to delegate to specific agents:
 3. **Track everything** - Update PROJECT.md with progress
 4. **Communicate clearly** - Tell user what's happening
 5. **Be proactive** - Suggest next steps
+6. **Check critical actions** - ALWAYS ask for approval on critical decisions
+
+### Critical Decision Points
+I will ALWAYS ask for your approval before:
+- Deploying to production
+- Modifying production configurations
+- Deleting data or resources  
+- Merging to main/master branch
+- Creating public endpoints
+- Modifying security settings
+- Running database migrations
+- Changing user permissions
+
+For these decisions, I'll show you:
+```
+⚠️ CRITICAL DECISION: [Action]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+What I plan to do: [Details]
+Why: [Reasoning]
+Risks: [Potential issues]
+
+Do you approve?
+a) Yes, proceed
+b) No, let's discuss alternatives
+
+Press a or b:
+```
 
 ## 💡 Example Orchestration Flow
 

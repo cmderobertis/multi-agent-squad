@@ -124,11 +124,23 @@ Tell Claude what you want automated:
 - **"Track my progress"** → Automatic progress logs
 - Hooks are created based on YOUR needs, not pre-configured
 
-### Adaptive Project Management
-- **GitHub Integration** - Automatic issue creation and PR management
-- **Jira Integration** - Story tracking and updates
-- **Manual Tracking** - Simple markdown task lists
-- **Your Choice** - Use what works for you
+### Extensive Integrations
+- **Project Management** - GitHub, Jira, Linear, Azure DevOps, ClickUp
+- **Communication** - Slack, Teams, Discord, Email notifications
+- **Documentation** - Confluence, Notion, GitHub Wiki
+- **CI/CD** - GitHub Actions, Jenkins, GitLab CI, CircleCI
+- **Monitoring** - Sentry, Datadog, Prometheus, New Relic
+- **Testing** - BrowserStack, SonarQube, Cypress
+- **Time Tracking** - Toggl, Harvest, Clockify
+
+### MCP Server Support
+Extend Claude's capabilities with Model Context Protocol servers:
+- **Database Explorer** - Query and explore PostgreSQL databases
+- **Advanced GitHub** - Deep integration beyond CLI
+- **Memory Server** - Persistent context across sessions
+- **Test Runner** - Execute and monitor test suites
+- **Container Management** - Docker and Kubernetes control
+- **Custom Servers** - Create your own for proprietary tools
 
 ### Smart Development Workflow
 1. **Requirements** → PM agent creates specs
@@ -195,21 +207,40 @@ Claude: [Creates doc structure, organizes existing content]
 
 ## 🤝 Integration Options
 
-### GitHub (Recommended)
-```bash
-# Install GitHub CLI
-brew install gh  # macOS
-# or download from https://cli.github.com/
+Multi-Agent Squad supports 30+ integrations across all aspects of agile development:
 
-# Authenticate
-gh auth login
+### Quick Integration Setup
+```bash
+# Interactive integration setup
+python scripts/integration-setup.py
+
+# Set up MCP servers for enhanced capabilities
+python scripts/mcp-server-setup.py
+
+# Configure specific agile tools
+python scripts/agile-tools-setup.py
 ```
 
-### Jira
-Just provide your Jira URL and API token when Claude asks.
+### Popular Integrations
 
-### Manual Tracking
-No setup needed! Claude maintains task lists in markdown.
+#### Project Management
+- **GitHub** - Issues, PRs, Projects (via `gh` CLI)
+- **Jira** - Full sprint and epic management
+- **Linear** - Modern issue tracking
+- **Azure DevOps** - Enterprise agile tools
+
+#### Communication
+- **Slack** - Real-time notifications and updates
+- **Microsoft Teams** - Enterprise communication
+- **Email** - Digests and critical alerts
+
+#### Development Tools
+- **MCP Servers** - Direct database access, enhanced file operations
+- **CI/CD** - GitHub Actions, Jenkins, GitLab CI
+- **Monitoring** - Sentry, Datadog, Prometheus
+- **Testing** - Automated test runners, quality gates
+
+See [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md) for the complete list and setup instructions.
 
 ## 📚 Advanced Features
 
@@ -217,6 +248,15 @@ No setup needed! Claude maintains task lists in markdown.
 ```
 You: "I need an agent who understands blockchain"
 Claude: [Creates specialized blockchain agent]
+```
+
+### MCP Server Capabilities
+```
+You: "Show me all users in the database"
+Claude: [Uses PostgreSQL MCP server to query directly]
+
+You: "What's our test coverage trend?"
+Claude: [Uses Analytics MCP server to show metrics]
 ```
 
 ### Multi-Environment Support
@@ -229,7 +269,16 @@ Claude: [Creates specialized blockchain agent]
 - Code review orchestration
 - Deployment pipelines
 - Documentation updates
+- Sprint ceremonies
 - All through plain English
+
+### Critical Decision Gates
+Claude always asks permission for:
+- Production deployments
+- Database migrations
+- Security changes
+- Main branch merges
+- Resource deletion
 
 ## 🛡️ Philosophy
 
