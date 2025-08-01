@@ -1,16 +1,16 @@
 # Multi-Agent Squad 🤖
 
-An advanced orchestration system for Claude Code that manages multi-repository software development through specialized AI agents, git worktrees, and automated workflows.
+An intelligent orchestration system for Claude Code that adapts to your project structure and manages development through specialized AI agents.
 
 ## 🌟 Overview
 
-Multi-Agent Squad transforms Claude Code into a complete software development team. When you start Claude in this directory, it automatically:
+Multi-Agent Squad transforms Claude Code into a complete software development team. Simply start Claude in this directory, and it will:
 
-1. **Reads CLAUDE.md** for orchestration instructions
-2. **Discovers your project** structure and repositories  
-3. **Manages git worktrees** for isolated feature development
-4. **Orchestrates specialized agents** through the entire SDLC
-5. **Integrates with GitHub** for issue tracking and PRs
+1. **Ask you about your project** through natural conversation
+2. **Create the perfect structure** based on your needs
+3. **Set up specialized agents** for your project type
+4. **Orchestrate development** through the entire lifecycle
+5. **Integrate with your tools** (GitHub, Jira, etc.)
 
 ## 🚀 Quick Start
 
@@ -19,272 +19,235 @@ Multi-Agent Squad transforms Claude Code into a complete software development te
 git clone https://github.com/yourusername/multi-agent-squad.git
 cd multi-agent-squad
 
-# 2. Set up your project structure
-mkdir -p projects/{frontend,backend}
-cd projects/frontend && git init && cd ../..
-cd projects/backend && git init && cd ../..
-
-# 3. Fill out PROJECT.md or run discovery
-python scripts/discover-project.py
-
-# 4. Start Claude Code
+# 2. Start Claude Code
 claude
 
-# Claude will automatically read CLAUDE.md and begin orchestration
+# 3. Claude will guide you through setup!
+# Just answer the questions in plain English
 ```
 
-## 📁 Repository Structure
+That's it! Claude will handle everything else through conversation.
 
+## 🎯 How It Works
+
+### First Time Setup
+
+When you start Claude, it will ask you:
+
+1. **"What are you building?"** - Describe your project
+2. **"Is this new or existing?"** - It adapts accordingly  
+3. **"Monorepo or multi-repo?"** - Your choice
+4. **"How do you track tasks?"** - GitHub, Jira, or manual
+5. **"Where should docs go?"** - Flexible documentation
+
+Claude then creates the perfect structure for YOUR project.
+
+### Flexible Structure Examples
+
+#### For a Multi-Repo Web App
 ```
-multi-agent-squad/
-├── CLAUDE.md                 # Auto-initialization instructions for Claude
-├── PROJECT.md               # Your project description (template provided)
-├── projects/                # Your actual code repositories (git ignored)
-│   ├── frontend/           # Example: React/Vue/Angular app
-│   ├── backend/            # Example: API service
-│   └── mobile/             # Example: React Native app
-├── worktrees/              # Active feature branches (git ignored)
-│   └── [repo]/[feature]/   # Isolated development environments
-├── .claude/
-│   ├── agents/             # Specialized AI agents
-│   │   ├── orchestration/  # Prime orchestrator
-│   │   ├── product/        # Product management
-│   │   ├── architecture/   # System design
-│   │   ├── engineering/    # Development
-│   │   ├── quality/        # QA and testing
-│   │   └── operations/     # DevOps
-│   └── commands/           # Custom Claude commands
-└── scripts/                # Automation tools
+your-project/
+├── CLAUDE.md          # Orchestration instructions
+├── PROJECT.md         # Your project details
+├── projects/          # Your repos (you manage these)
+│   ├── frontend/      # Your React app
+│   └── backend/       # Your API
+├── docs/              # All documentation
+└── .claude/agents/    # Your AI team
 ```
 
-## 🎭 Available Agents
+#### For a Monorepo
+```
+your-project/
+├── CLAUDE.md          # Orchestration instructions
+├── PROJECT.md         # Your project details
+├── src/               # All your code
+│   ├── frontend/
+│   ├── backend/
+│   └── shared/
+├── docs/              # Documentation
+└── .claude/agents/    # Your AI team
+```
 
-### Core Team
-- **🎯 Prime Orchestrator** - Coordinates all agents and manages workflows
-- **📊 Product Manager** - Creates PRDs and manages requirements
-- **🏗️ Solution Architect** - Designs system architecture
-- **💻 Senior Backend Engineer** - Builds robust APIs and services
-- **🎨 Senior Frontend Engineer** - Creates exceptional user interfaces
-- **✅ QA Engineer** - Ensures quality through comprehensive testing
-- **🔧 DevOps Engineer** - Manages infrastructure and deployments
+#### For a Documentation Project
+```
+your-project/
+├── CLAUDE.md          # Orchestration instructions
+├── PROJECT.md         # Project details
+├── docs/              # All documentation
+│   ├── architecture/
+│   ├── guides/
+│   └── api/
+└── .claude/agents/    # Documentation-focused agents
+```
+
+## 🎭 Your AI Development Team
+
+Based on your project, Claude will suggest relevant agents:
+
+### For Full-Stack Projects
+- **🎯 Prime Orchestrator** - Manages the entire workflow
+- **📊 Product Manager** - Requirements and user stories
+- **🏗️ Solution Architect** - System design
+- **💻 Backend Engineer** - API development
+- **🎨 Frontend Engineer** - User interface
+- **✅ QA Engineer** - Testing
+- **🔧 DevOps Engineer** - Deployment
+
+### For API Projects
+- **🏗️ API Architect** - API design
+- **💻 Backend Engineer** - Implementation
+- **📖 API Documentation Specialist** - Docs
+- **✅ API Test Engineer** - Testing
+
+### For Documentation Projects
+- **📝 Technical Writer** - Documentation
+- **🏗️ Information Architect** - Structure
+- **👁️ Documentation Reviewer** - Quality
 
 ## 🛠️ Key Features
 
-### 1. Git Worktree Management
+### Natural Language Control
+Just talk to Claude normally:
+- "I need to add user authentication"
+- "Help me set up CI/CD"
+- "Create API documentation"
+- "Review our architecture"
+
+### Adaptive Project Management
+- **GitHub Integration** - Automatic issue creation and PR management
+- **Jira Integration** - Story tracking and updates
+- **Manual Tracking** - Simple markdown task lists
+- **Your Choice** - Use what works for you
+
+### Smart Development Workflow
+1. **Requirements** → PM agent creates specs
+2. **Design** → Architect creates system design
+3. **Implementation** → Engineers build it
+4. **Testing** → QA ensures quality
+5. **Deployment** → DevOps handles release
+
+### Git Worktree Support (Optional)
+For multi-repo projects with parallel development:
 ```bash
-# Create worktrees for a new feature across multiple repos
-./scripts/worktree-manager.sh create-feature auth-system frontend backend
-
-# List all active worktrees
-./scripts/worktree-manager.sh list-active
-
-# Clean up merged worktrees
-./scripts/worktree-manager.sh cleanup-merged
+./scripts/worktree-manager.sh create-feature auth frontend backend
 ```
 
-### 2. GitHub Integration
-```bash
-# Create a feature issue
-python scripts/github-integration.py create-issue "user-auth" \
-  "Add OAuth authentication" --repos frontend backend
+## 📋 No Complex Setup Required
 
-# Create pull requests
-python scripts/github-integration.py create-pr backend user-auth --issue 47
+Unlike other tools, Multi-Agent Squad:
+- ✅ **No installation process** - Just clone and start
+- ✅ **No configuration files** - Claude asks what you need
+- ✅ **No forced structure** - Adapts to your preferences
+- ✅ **No learning curve** - Plain English control
+
+## 🔧 System Requirements
+
+### Required
+- **Git** - For version control
+- **Claude Code** - The AI interface
+
+### Optional
+- **GitHub CLI** (`gh`) - For GitHub integration
+- **Python 3.8+** - For automation scripts
+- **Jira API Token** - For Jira integration
+
+Claude will check what you have and work with it!
+
+## 🎯 Example Workflows
+
+### Starting a New SaaS Product
+```
+You: "I want to build a SaaS product for team collaboration"
+Claude: "Great! Is this a new project?"
+You: "Yes, brand new"
+Claude: "Will you use separate repos for frontend and backend?"
+You: "Yes, we prefer separate repos"
+Claude: [Creates structure, suggests agents, begins planning]
 ```
 
-### 3. Custom Commands
-- `/start-feature` - Begin new feature with full orchestration
-- `/project-status` - View comprehensive project status
-- `/create-agent` - Generate specialized agents
-- `/manage-worktrees` - Control git worktrees
-
-## 🔄 Development Workflow
-
-### Starting a New Feature
-
-1. **Tell Claude what you need**
-   ```
-   "I need to add user authentication with OAuth support"
-   ```
-
-2. **Claude orchestrates the team**
-   - PM creates requirements
-   - Architect designs solution
-   - Creates GitHub issue
-   - Sets up worktrees
-   - Assigns developers
-   - Tracks progress
-
-3. **Development happens in isolation**
-   - Each repo gets its own worktree
-   - Changes are coordinated
-   - Tests are automated
-   - Reviews are thorough
-
-4. **Seamless integration**
-   - PRs are linked to issues
-   - Merges are synchronized
-   - Worktrees are cleaned up
-   - Issues are closed
-
-## 📋 PROJECT.md Configuration
-
-The `PROJECT.md` file tells agents about your project:
-
-```yaml
-repositories:
-  - name: frontend
-    path: ./projects/frontend
-    framework: React
-    language: TypeScript
-    
-  - name: backend
-    path: ./projects/backend
-    framework: FastAPI
-    language: Python
+### Organizing an Existing Project
+```
+You: "I have a messy React app that needs organization"
+Claude: "I'll help! Where is your code currently?"
+You: "Everything is in a src folder"
+Claude: "Is this just frontend or do you have backend too?"
+You: [Continues with reorganization]
 ```
 
-## 🔧 Setup Instructions
-
-### 1. Prerequisites
-- Git 2.5+ (for worktree support)
-- Python 3.8+ (for scripts)
-- GitHub CLI (optional, for GitHub integration)
-- Claude Code
-
-### 2. Initial Setup
-```bash
-# Run the discovery script to analyze your project
-python scripts/discover-project.py
-
-# Or manually edit PROJECT.md
-edit PROJECT.md
+### Documentation Project
+```
+You: "We need to document our API"
+Claude: "I'll set up a documentation project. Do you have existing docs?"
+You: "Some scattered markdown files"
+Claude: [Creates doc structure, organizes existing content]
 ```
 
-### 3. GitHub Integration (Optional)
+## 🤝 Integration Options
+
+### GitHub (Recommended)
 ```bash
 # Install GitHub CLI
 brew install gh  # macOS
-# or visit: https://cli.github.com/
+# or download from https://cli.github.com/
 
 # Authenticate
 gh auth login
 ```
 
-## 🎯 Example Use Cases
+### Jira
+Just provide your Jira URL and API token when Claude asks.
 
-### Full-Stack Feature Development
-```
-You: "Create a real-time chat feature"
-Claude: Orchestrates PM → Architect → Backend (WebSocket) → Frontend (UI) → QA
-Result: Coordinated implementation across all repositories
-```
-
-### Bug Fix Across Repos
-```
-You: "Fix the user profile loading issue"
-Claude: Creates worktrees → Assigns developers → Fixes → Tests → PRs
-Result: Synchronized fix with minimal disruption
-```
-
-### Architecture Refactoring
-```
-You: "Migrate from REST to GraphQL"
-Claude: Plans migration → Creates incremental tasks → Manages compatibility
-Result: Smooth transition without breaking changes
-```
-
-## 🤝 Best Practices
-
-1. **One Feature = One Set of Worktrees**
-   - Keep features isolated
-   - Clean up after merging
-
-2. **Let Agents Specialize**
-   - PM for requirements
-   - Architect for design
-   - Engineers for implementation
-
-3. **Trust the Orchestration**
-   - Claude manages the workflow
-   - Agents hand off seamlessly
-
-4. **Keep PROJECT.md Updated**
-   - Reflects current state
-   - Helps agents understand context
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-**"Claude doesn't recognize my project"**
-- Ensure CLAUDE.md exists
-- Run `python scripts/discover-project.py`
-- Check PROJECT.md is filled out
-
-**"Worktree creation failed"**
-- Ensure you have git 2.5+
-- Check repository exists in projects/
-- Verify you're on a valid branch
-
-**"GitHub integration not working"**
-- Install and authenticate gh CLI
-- Check repository permissions
-- Verify issue/PR templates
+### Manual Tracking
+No setup needed! Claude maintains task lists in markdown.
 
 ## 📚 Advanced Features
 
 ### Custom Agent Creation
-```python
-# Create a specialized agent for your domain
-/create-agent "Blockchain Security Expert" \
-  --experience=15 \
-  --specialty="Smart Contract Auditing"
+```
+You: "I need an agent who understands blockchain"
+Claude: [Creates specialized blockchain agent]
 ```
 
-### Multi-Environment Workflows
-- Development worktrees
-- Staging branches
-- Production deployments
-- All orchestrated by agents
+### Multi-Environment Support
+- Development
+- Staging  
+- Production
+- All managed through conversation
 
-### Intelligent Code Reviews
-- Multiple agents review different aspects
-- Security, performance, and style checks
-- Automated feedback incorporation
+### Automated Workflows
+- Code review orchestration
+- Deployment pipelines
+- Documentation updates
+- All through plain English
 
-## 🛡️ Security & Best Practices
+## 🛡️ Philosophy
 
-- **Isolated Development** - Worktrees prevent cross-contamination
-- **Access Control** - Each repo can have different permissions  
-- **Automated Security Scans** - Built into CI/CD pipeline
-- **Code Review Requirements** - Enforced by orchestration
+Multi-Agent Squad believes in:
+- **Flexibility** - Your project, your way
+- **Simplicity** - No complex commands or configs
+- **Intelligence** - Agents with real expertise
+- **Adaptability** - Works with what you have
+- **Transparency** - Clear, documented decisions
 
-## 🤖 How It Works
+## 🚦 Getting Help
 
-1. **CLAUDE.md** provides Claude with initialization instructions
-2. **PROJECT.md** describes your specific project
-3. **Agents** have specialized expertise and experience
-4. **Orchestrator** coordinates everything
-5. **Worktrees** isolate development
-6. **GitHub** tracks progress
-
-## 🎉 Benefits
-
-- **10x Faster Development** - Parallel work across repos
-- **Higher Quality** - Multiple specialized reviews
-- **Better Coordination** - Automated orchestration
-- **Clean Git History** - Isolated feature branches
-- **Full Visibility** - GitHub integration
+Just ask Claude:
+- "How do I add a new feature?"
+- "What agents do I have?"
+- "Show me the project status"
+- "Help me with deployment"
 
 ## 📄 License
 
 MIT License - see LICENSE file
 
-## 🙏 Acknowledgments
+## 🙏 Contributing
 
-Inspired by modern software development best practices and the need for better AI-assisted development workflows.
+We welcome contributions! The best way to contribute is to use the system and share your experience.
 
 ---
 
-**Ready to supercharge your development?** Start Claude Code in this directory and let the Multi-Agent Squad transform how you build software!
+**Ready to start?** Just `cd` into this directory and start Claude Code. No installation, no configuration, just natural conversation to build amazing software!
+
+*Multi-Agent Squad: Where AI meets human creativity to build exceptional software.*
