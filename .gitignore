@@ -20,6 +20,10 @@ Icon?
 .env
 .env.local
 .env.*.local
+.env.slack
+.env.email
+.env.integrations
+.env.mcp
 
 # Logs
 *.log
@@ -53,9 +57,11 @@ venv/
 env/
 ENV/
 
-# Project repositories
-# Each subdirectory in projects/ is its own git repository
-projects/
+# User Project Directory
+# The 'project/' directory contains all user work
+# Each subdirectory can be its own git repository
+# Comment out the line below if you want to track project/ in this repo
+project/
 
 # Git worktrees
 # Active feature branches are worked on here
@@ -65,6 +71,14 @@ worktrees/
 .orchestration/
 *.state
 .feature-tracking/
+
+# Project-specific files (generated during setup)
+PROJECT_STATUS.md
+TEST_REPORT.md
+PROJECT_STATUS_REPORT.md
+
+# Local Claude settings
+.claude/settings.local.json
 
 # Temporary files
 *.tmp
