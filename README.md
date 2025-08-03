@@ -47,7 +47,7 @@ Multi-Agent Squad transforms Claude Code into a complete software development te
 
 ```bash
 # 1. Clone this repository
-git clone https://github.com/yourusername/multi-agent-squad.git
+git clone https://github.com/bijutharakan/multi-agent-squad.git
 cd multi-agent-squad
 
 # 2. Start Claude Code
