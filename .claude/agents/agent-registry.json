@@ -1,0 +1,61 @@
+{
+  "agents": [
+    {
+      "id": "sqlite-performance-expert",
+      "name": "SQLite Performance Expert",
+      "category": "database",
+      "specialization": "Database optimization and query performance",
+      "experience": "12+ years",
+      "file_path": ".claude/agents/database/sqlite-performance-expert.md",
+      "tools": ["Read", "Write", "MultiEdit", "Bash", "Grep", "Task"],
+      "expertise": [
+        "Query plan analysis and optimization",
+        "Index strategy design",
+        "SQLite WASM performance tuning",
+        "Memory management and cache optimization",
+        "Transaction batching and WAL mode"
+      ],
+      "project_focus": "SQLite Database Management Web App",
+      "created": "2025-08-03"
+    },
+    {
+      "id": "data-visualization-specialist",
+      "name": "Data Visualization Specialist", 
+      "category": "visualization",
+      "specialization": "Complex table/grid interfaces and user experience",
+      "experience": "10+ years",
+      "file_path": ".claude/agents/visualization/data-visualization-specialist.md",
+      "tools": ["Read", "Write", "MultiEdit", "Bash", "Grep", "Task"],
+      "expertise": [
+        "High-performance data grids and virtual scrolling",
+        "Interactive table components with inline editing",
+        "Query builder visual components",
+        "Database management UIs",
+        "React Table mastery"
+      ],
+      "project_focus": "SQLite Database Management Web App",
+      "created": "2025-08-03"
+    },
+    {
+      "id": "csv-data-import-specialist",
+      "name": "CSV/Data Import Specialist",
+      "category": "data-import", 
+      "specialization": "Schema analysis and data transformation",
+      "experience": "15+ years",
+      "file_path": ".claude/agents/data-import/csv-data-import-specialist.md",
+      "tools": ["Read", "Write", "MultiEdit", "Bash", "Grep", "Task"],
+      "expertise": [
+        "CSV parsing and validation at scale",
+        "Automatic schema detection and inference", 
+        "Data type analysis and conversion",
+        "Import pipeline architecture",
+        "Error handling and data quality"
+      ],
+      "project_focus": "SQLite Database Management Web App",
+      "created": "2025-08-03"
+    }
+  ],
+  "project": "SQLite Database Management Web Application",
+  "created": "2025-08-03",
+  "last_updated": "2025-08-03"
+}

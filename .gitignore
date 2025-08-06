@@ -61,7 +61,7 @@ ENV/
 # The 'project/' directory contains all user work
 # Each subdirectory can be its own git repository
 # Comment out the line below if you want to track project/ in this repo
-project/
+# project/
 
 # Git worktrees
 # Active feature branches are worked on here
