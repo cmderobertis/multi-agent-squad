@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../ui/button';
+import { SearchableSelect } from '../../ui/searchable-select';
 import { useQueryBuilderStore } from '../../../stores/query-builder-store';
 import { useDatabaseStore } from '../../../stores/database-store';
 import { cn } from '../../../utils/cn';
@@ -194,45 +195,44 @@ const ConditionRow: React.FC<ConditionRowProps> = ({
     <div className="flex items-start gap-2 p-3 border rounded-lg bg-gray-50">
       {/* Logical operator */}
       {showLogicalOperator && (
-        <select
+        <SearchableSelect
           value={condition.logicalOperator || 'AND'}
-          onChange={(e) => onChange(index, 'logicalOperator', e.target.value)}
-          className="px-2 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-        >
-          <option value="AND">AND</option>
-          <option value="OR">OR</option>
-        </select>
+          onChange={(value) => onChange(index, 'logicalOperator', value)}
+          options={[
+            { value: 'AND', label: 'AND' },
+            { value: 'OR', label: 'OR' }
+          ]}
+          className="text-sm min-w-20"
+        />
       )}
 
       {/* Column selector */}
       <div className="flex-1">
-        <select
+        <SearchableSelect
           value={condition.column}
-          onChange={(e) => onChange(index, 'column', e.target.value)}
-          className="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-        >
-          <option value="">Select field...</option>
-          {availableColumns.map((col) => (
-            <option key={col.value} value={col.value}>
-              {col.label} ({col.type})
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onChange(index, 'column', value)}
+          options={availableColumns.map(col => ({
+            value: col.value,
+            label: `${col.label} (${col.type})`,
+            group: col.table
+          }))}
+          placeholder="Select field..."
+          className="text-sm"
+        />
       </div>
 
       {/* Operator selector */}
       <div className="min-w-32">
-        <select
+        <SearchableSelect
           value={condition.operator}
-          onChange={(e) => onChange(index, 'operator', e.target.value)}
-          className="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-        >
-          {OPERATORS.map((op) => (
-            <option key={op.value} value={op.value}>
-              {mode === 'simple' ? op.label : `${op.label} (${op.symbol})`}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onChange(index, 'operator', value)}
+          options={OPERATORS.map(op => ({
+            value: op.value,
+            label: mode === 'simple' ? op.label : `${op.label} (${op.symbol})`
+          }))}
+          placeholder="Select operator..."
+          className="text-sm"
+        />
       </div>
 
       {/* Value input */}

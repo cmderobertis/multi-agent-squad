@@ -33,9 +33,17 @@ export interface AvailableColumn {
   column: import('./database').Column;
 }
 
+export interface TableAlias {
+  tableName: string;
+  alias: string;
+}
+
 export interface QueryBuilderQuery {
   selectedTables: string[];
+  primaryTable?: string; // The first table selected - base for JOINs
+  tableAliases: TableAlias[]; // Auto-generated aliases for all tables
   selectedColumns: SelectedColumn[];
+  selectAllColumns: boolean; // Whether to use SELECT * 
   joins: import('./database').QueryJoin[];
   conditions: import('./database').QueryCondition[];
   groupBy: string[];

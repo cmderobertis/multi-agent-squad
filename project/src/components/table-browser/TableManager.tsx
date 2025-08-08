@@ -9,6 +9,13 @@ interface CreateTableData {
   columns: Column[];
 }
 
+interface CSVImportData {
+  tableName: string;
+  columns: Column[];
+  rows: any[];
+  createTable: boolean;
+}
+
 interface TableManagerProps {
   onTableCreated: () => void;
 }
@@ -21,6 +28,9 @@ export function TableManager({ onTableCreated }: TableManagerProps) {
     columns: []
   });
   const [creating, setCreating] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [csvImportData, setCsvImportData] = useState<CSVImportData | null>(null);
+  const [importing, setImporting] = useState(false);
 
   const addColumn = () => {
     setNewTable(prev => ({
@@ -54,6 +64,118 @@ export function TableManager({ onTableCreated }: TableManagerProps) {
       ...prev,
       columns: prev.columns.filter((_, i) => i !== index)
     }));
+  };
+
+  const handleCSVFileSelect = async (e: Event) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const lines = text.trim().split('\n');
+      
+      if (lines.length < 2) {
+        alert('CSV file must have at least a header row and one data row');
+        return;
+      }
+
+      // Parse header
+      const headers = lines[0].split(',').map(h => h.trim().replace(/['"]/g, ''));
+      
+      // Parse data rows
+      const dataRows = lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim().replace(/['"]/g, ''));
+        const row: any = {};
+        headers.forEach((header, i) => {
+          row[header] = values[i] || null;
+        });
+        return row;
+      });
+
+      // Detect column types from data
+      const columns: Column[] = headers.map(header => {
+        const sampleValues = dataRows.slice(0, 10).map(row => row[header]).filter(v => v !== null && v !== '');
+        let type: SQLiteDataType = 'TEXT';
+        
+        // Simple type detection
+        if (sampleValues.length > 0) {
+          const isAllNumbers = sampleValues.every(v => !isNaN(Number(v)));
+          const isAllIntegers = sampleValues.every(v => Number.isInteger(Number(v)));
+          
+          if (isAllNumbers) {
+            type = isAllIntegers ? 'INTEGER' : 'REAL';
+          }
+        }
+
+        return {
+          name: header.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase(),
+          type,
+          nullable: true,
+          primaryKey: false,
+          autoIncrement: false,
+          unique: false,
+          defaultValue: undefined
+        };
+      });
+
+      const tableName = file.name.replace('.csv', '').replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+      
+      setCsvImportData({
+        tableName,
+        columns,
+        rows: dataRows,
+        createTable: true
+      });
+      setShowImportDialog(true);
+      
+    } catch (error) {
+      console.error('Failed to parse CSV:', error);
+      alert('Failed to parse CSV file. Please check the file format.');
+    }
+  };
+
+  const handleImportCSV = async () => {
+    if (!csvImportData) return;
+
+    setImporting(true);
+    
+    try {
+      // Create table if needed
+      if (csvImportData.createTable) {
+        await sqliteService.createTable(csvImportData.tableName, csvImportData.columns);
+      }
+
+      // Insert data
+      for (const row of csvImportData.rows) {
+        // Clean the row data to match column names
+        const cleanRow: any = {};
+        csvImportData.columns.forEach(col => {
+          const originalName = Object.keys(row).find(k => 
+            k.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase() === col.name
+          );
+          if (originalName && row[originalName] !== null && row[originalName] !== '') {
+            cleanRow[col.name] = row[originalName];
+          }
+        });
+        
+        if (Object.keys(cleanRow).length > 0) {
+          await sqliteService.insertRow(csvImportData.tableName, cleanRow);
+        }
+      }
+
+      // Reset and refresh
+      setCsvImportData(null);
+      setShowImportDialog(false);
+      onTableCreated();
+      
+      alert(`Successfully imported ${csvImportData.rows.length} rows into table "${csvImportData.tableName}"`);
+      
+    } catch (error) {
+      console.error('Failed to import CSV:', error);
+      alert(`Failed to import CSV: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setImporting(false);
+    }
   };
 
   const handleCreateTable = async () => {
@@ -101,9 +223,23 @@ export function TableManager({ onTableCreated }: TableManagerProps) {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold">Table Management</h2>
-        <Button onClick={() => setShowCreateDialog(true)}>
-          Create New Table
-        </Button>
+        <div className="flex space-x-2">
+          <Button onClick={() => setShowCreateDialog(true)}>
+            Create New Table
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = '.csv';
+              input.onchange = handleCSVFileSelect;
+              input.click();
+            }}
+          >
+            Import CSV
+          </Button>
+        </div>
       </div>
 
       {/* Existing Tables */}
@@ -280,6 +416,140 @@ export function TableManager({ onTableCreated }: TableManagerProps) {
                 disabled={creating || !newTable.name.trim() || newTable.columns.length === 0}
               >
                 {creating ? 'Creating...' : 'Create Table'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CSV Import Dialog */}
+      {showImportDialog && csvImportData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-card border rounded-lg shadow-lg max-w-4xl w-full mx-4 max-h-[80vh] flex flex-col">
+            {/* Header */}
+            <div className="border-b p-4">
+              <h2 className="text-lg font-semibold">Import CSV File</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Review the detected schema and data before importing
+              </p>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-auto p-4 space-y-6">
+              {/* Table Name */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Table Name</label>
+                <input
+                  type="text"
+                  value={csvImportData.tableName}
+                  onChange={(e) => setCsvImportData(prev => prev ? { ...prev, tableName: e.target.value } : null)}
+                  placeholder="Enter table name"
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+
+              {/* Schema Preview */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Detected Schema ({csvImportData.columns.length} columns)</label>
+                <div className="border rounded-lg overflow-hidden">
+                  <div className="bg-muted p-2 text-sm font-medium border-b">
+                    Columns
+                  </div>
+                  <div className="max-h-48 overflow-auto">
+                    {csvImportData.columns.map((col, index) => (
+                      <div key={index} className="p-2 border-b last:border-b-0 flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <span className="font-mono text-sm">{col.name}</span>
+                          <span className="text-sm text-muted-foreground">{col.type}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <select
+                            value={col.type}
+                            onChange={(e) => {
+                              setCsvImportData(prev => {
+                                if (!prev) return null;
+                                const newColumns = [...prev.columns];
+                                newColumns[index] = { ...newColumns[index], type: e.target.value as SQLiteDataType };
+                                return { ...prev, columns: newColumns };
+                              });
+                            }}
+                            className="text-xs px-2 py-1 border rounded"
+                          >
+                            <option value="TEXT">TEXT</option>
+                            <option value="INTEGER">INTEGER</option>
+                            <option value="REAL">REAL</option>
+                            <option value="BLOB">BLOB</option>
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Preview */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Data Preview ({csvImportData.rows.length} rows)</label>
+                <div className="border rounded-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-muted">
+                        <tr>
+                          {Object.keys(csvImportData.rows[0] || {}).slice(0, 6).map((header) => (
+                            <th key={header} className="text-left p-2 border-r last:border-r-0">
+                              {header}
+                            </th>
+                          ))}
+                          {Object.keys(csvImportData.rows[0] || {}).length > 6 && (
+                            <th className="text-left p-2">...</th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {csvImportData.rows.slice(0, 5).map((row, index) => (
+                          <tr key={index} className="border-b">
+                            {Object.keys(csvImportData.rows[0] || {}).slice(0, 6).map((header) => (
+                              <td key={header} className="p-2 border-r last:border-r-0 truncate max-w-32">
+                                {row[header] || '—'}
+                              </td>
+                            ))}
+                            {Object.keys(csvImportData.rows[0] || {}).length > 6 && (
+                              <td className="p-2">...</td>
+                            )}
+                          </tr>
+                        ))}
+                        {csvImportData.rows.length > 5 && (
+                          <tr>
+                            <td colSpan={Math.min(6, Object.keys(csvImportData.rows[0] || {}).length)} 
+                                className="p-2 text-center text-muted-foreground">
+                              ... and {csvImportData.rows.length - 5} more rows
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="border-t p-4 flex justify-end space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setShowImportDialog(false);
+                  setCsvImportData(null);
+                }}
+                disabled={importing}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleImportCSV}
+                disabled={importing || !csvImportData.tableName.trim()}
+              >
+                {importing ? 'Importing...' : `Import ${csvImportData.rows.length} Rows`}
               </Button>
             </div>
           </div>

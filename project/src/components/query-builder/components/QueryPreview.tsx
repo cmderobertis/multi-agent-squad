@@ -6,6 +6,7 @@ interface QueryPreviewProps {
   sql: string;
   editable?: boolean;
   fullHeight?: boolean;
+  sidebarMode?: boolean;
   onSqlChange?: (sql: string) => void;
 }
 
@@ -13,6 +14,7 @@ export const QueryPreview: React.FC<QueryPreviewProps> = ({
   sql,
   editable = false,
   fullHeight = false,
+  sidebarMode = false,
   onSqlChange
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -60,18 +62,25 @@ export const QueryPreview: React.FC<QueryPreviewProps> = ({
   };
 
   return (
-    <div className={cn("border-t bg-white flex flex-col", fullHeight ? "h-full" : "")}>
+    <div className={cn(
+      "flex flex-col bg-white", 
+      fullHeight ? "h-full" : "",
+      sidebarMode ? "h-full" : "border-t"
+    )}>
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b bg-gray-50">
-        <h3 className="font-semibold text-sm">SQL Preview</h3>
-        <div className="flex gap-2">
+      <div className={cn(
+        "flex items-center justify-between border-b bg-gray-50",
+        sidebarMode ? "p-2" : "p-3"
+      )}>
+        <h3 className={cn("font-semibold", sidebarMode ? "text-xs" : "text-sm")}>SQL Preview</h3>
+        <div className={cn("flex", sidebarMode ? "gap-1" : "gap-2")}>
           <Button
             size="sm"
             variant="ghost"
             onClick={copyToClipboard}
-            className="h-7 px-2"
+            className={cn(sidebarMode ? "h-6 px-1 text-xs" : "h-7 px-2")}
           >
-            {copied ? '✓ Copied' : '📋 Copy'}
+            {copied ? '✓' : '📋'}
           </Button>
           
           {editable && (
@@ -79,51 +88,62 @@ export const QueryPreview: React.FC<QueryPreviewProps> = ({
               size="sm"
               variant="ghost"
               onClick={() => setIsEditing(!isEditing)}
-              className="h-7 px-2"
+              className={cn(sidebarMode ? "h-6 px-1 text-xs" : "h-7 px-2")}
             >
-              {isEditing ? '👁️ Preview' : '✏️ Edit'}
+              {isEditing ? '👁️' : '✏️'}
             </Button>
           )}
         </div>
       </div>
 
       {/* Content */}
-      <div className={cn("flex-1 p-3", fullHeight ? "overflow-hidden" : "")}>
+      <div className={cn(
+        "flex-1 overflow-hidden",
+        sidebarMode ? "p-2" : "p-3",
+        fullHeight ? "overflow-hidden" : ""
+      )}>
         {isEditing ? (
-          <div className="h-full flex flex-col space-y-3">
+          <div className="h-full flex flex-col space-y-2">
             <textarea
               value={editedSql}
               onChange={(e) => setEditedSql(e.target.value)}
               className={cn(
-                "w-full font-mono text-sm border rounded-md p-3 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent",
-                fullHeight ? "flex-1" : "h-48"
+                "w-full font-mono border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent",
+                sidebarMode ? "text-xs p-2 flex-1" : "text-sm p-3",
+                fullHeight ? "flex-1" : sidebarMode ? "flex-1" : "h-48"
               )}
               placeholder="Enter your SQL query..."
               spellCheck={false}
             />
             
-            <div className="flex gap-2">
-              <Button size="sm" onClick={handleSave}>
-                Apply Changes
+            <div className={cn("flex", sidebarMode ? "gap-1" : "gap-2")}>
+              <Button size={sidebarMode ? "sm" : "sm"} onClick={handleSave} className={sidebarMode ? "text-xs h-7" : ""}>
+                Apply
               </Button>
-              <Button size="sm" variant="outline" onClick={handleCancel}>
+              <Button size={sidebarMode ? "sm" : "sm"} variant="outline" onClick={handleCancel} className={sidebarMode ? "text-xs h-7" : ""}>
                 Cancel
               </Button>
             </div>
           </div>
         ) : (
-          <div className={cn("h-full overflow-auto", fullHeight ? "" : "max-h-48")}>
+          <div className="h-full overflow-auto">
             {sql ? (
-              <pre className="font-mono text-sm bg-gray-50 p-3 rounded-md border overflow-x-auto whitespace-pre-wrap">
+              <pre className={cn(
+                "font-mono bg-gray-50 rounded-md border overflow-x-auto whitespace-pre-wrap",
+                sidebarMode ? "text-xs p-2" : "text-sm p-3"
+              )}>
                 <code className="language-sql">
                   {formatSQL(sql)}
                 </code>
               </pre>
             ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <div className="text-4xl mb-2">📝</div>
-                <p className="text-sm">Your query will appear here</p>
-                <p className="text-xs mt-1">Select tables and fields to build your query</p>
+              <div className={cn(
+                "text-center text-muted-foreground",
+                sidebarMode ? "py-4" : "py-8"
+              )}>
+                <div className={cn("mb-2", sidebarMode ? "text-2xl" : "text-4xl")}>📝</div>
+                <p className={cn(sidebarMode ? "text-xs" : "text-sm")}>Query will appear here</p>
+                {!sidebarMode && <p className="text-xs mt-1">Select tables and fields to build your query</p>}
               </div>
             )}
           </div>
@@ -131,7 +151,7 @@ export const QueryPreview: React.FC<QueryPreviewProps> = ({
       </div>
 
       {/* Footer */}
-      {sql && !isEditing && (
+      {sql && !isEditing && !sidebarMode && (
         <div className="px-3 pb-3 text-xs text-muted-foreground">
           <div className="flex justify-between items-center">
             <span>

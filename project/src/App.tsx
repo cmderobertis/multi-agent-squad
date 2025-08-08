@@ -111,6 +111,28 @@ function App() {
     input.click();
   };
 
+  const handleExportDatabase = async () => {
+    if (!currentDatabase) return;
+    
+    try {
+      const data = await sqliteService.exportDatabase();
+      const blob = new Blob([data], { type: 'application/x-sqlite3' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentDatabase.name.replace(/[^a-zA-Z0-9]/g, '_')}.db`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Failed to export database:', error);
+      alert('Failed to export database. Please try again.');
+    }
+  };
+
   return (
     <div className={`min-h-screen bg-background text-foreground ${theme === 'dark' ? 'dark' : ''}`}>
       <header className="border-b bg-card">
@@ -149,6 +171,13 @@ function App() {
                     onClick={() => setActiveView('table-manager')}
                   >
                     Manage
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExportDatabase}
+                  >
+                    Export
                   </Button>
                 </div>
               )}

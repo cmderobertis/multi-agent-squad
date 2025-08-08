@@ -6,9 +6,11 @@ import { cn } from '../../utils/cn';
 import { TableSelector } from './components/TableSelector';
 import { FieldSelector } from './components/FieldSelector';
 import { ConditionBuilder } from './components/ConditionBuilder';
+import { JoinBuilder } from './components/JoinBuilder';
 import { QueryPreview } from './components/QueryPreview';
 import { ResultsPanel } from './components/ResultsPanel';
 import { QueryBuilderTabs } from './components/QueryBuilderTabs';
+import { HorizontalResizablePanels } from '../ui/resizable-panels';
 
 interface QueryBuilderProps {
   className?: string;
@@ -33,8 +35,14 @@ export const QueryBuilder: React.FC<QueryBuilderProps> = ({
     resetQuery,
     generateSQL,
     setActiveTab,
-    setMode
+    setMode,
+    setAvailableTables
   } = useQueryBuilderStore();
+
+  // Update available tables when they change
+  React.useEffect(() => {
+    setAvailableTables(tables);
+  }, [tables, setAvailableTables]);
 
   const sql = generateSQL();
 
@@ -139,13 +147,25 @@ export const QueryBuilder: React.FC<QueryBuilderProps> = ({
       <div className="flex-1 overflow-hidden">
         {activeTab === 'builder' && (
           <div className="h-full flex">
-            {/* Left Sidebar - Table Selection */}
-            <div className="w-80 border-r bg-card flex flex-col">
-              <TableSelector 
-                tables={tables}
-                selectedTables={currentQuery.selectedTables}
-                mode={mode}
-              />
+            {/* Left Sidebar - Resizable Table Selection and SQL Preview */}
+            <div className="w-80 border-r bg-card">
+              <HorizontalResizablePanels
+                defaultSplit={60}
+                minSize={20}
+                maxSize={80}
+                className="h-full"
+              >
+                <TableSelector 
+                  tables={tables}
+                  selectedTables={currentQuery.selectedTables}
+                  mode={mode}
+                />
+                <QueryPreview 
+                  sql={sql}
+                  editable={mode === 'advanced'}
+                  sidebarMode={true}
+                />
+              </HorizontalResizablePanels>
             </div>
 
             {/* Main Content */}
@@ -159,20 +179,21 @@ export const QueryBuilder: React.FC<QueryBuilderProps> = ({
                 />
               </div>
 
-              {/* Conditions */}
+              {/* Table Joins */}
               <div className="border-b">
-                <ConditionBuilder 
-                  conditions={currentQuery.conditions}
-                  availableTables={currentQuery.selectedTables}
+                <JoinBuilder 
+                  selectedTables={currentQuery.selectedTables}
+                  joins={currentQuery.joins}
                   mode={mode}
                 />
               </div>
 
-              {/* SQL Preview */}
+              {/* Conditions */}
               <div className="flex-1">
-                <QueryPreview 
-                  sql={sql}
-                  editable={mode === 'advanced'}
+                <ConditionBuilder 
+                  conditions={currentQuery.conditions}
+                  availableTables={currentQuery.selectedTables}
+                  mode={mode}
                 />
               </div>
             </div>
@@ -216,6 +237,9 @@ export const QueryBuilder: React.FC<QueryBuilderProps> = ({
             </span>
             <span>
               Tables: <span className="font-medium">{currentQuery.selectedTables.length}</span>
+            </span>
+            <span>
+              Joins: <span className="font-medium">{currentQuery.joins.length}</span>
             </span>
             <span>
               Columns: <span className="font-medium">

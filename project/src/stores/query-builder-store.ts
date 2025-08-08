@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { sqliteService } from '../services/sqlite-service';
+import { findForeignKeyBetweenTables } from '../utils/foreign-key-detector';
+import { generateTableAliases, getAliasForTable } from '../utils/table-alias-generator';
 import type { 
   QueryBuilderQuery, 
   SavedQuery, 
@@ -13,13 +15,17 @@ import type {
   QueryExecutionMetrics,
   QueryBuilderSettings,
   QueryValidationResult,
-  QueryTemplate
+  QueryTemplate,
+  TableAlias
 } from '../types/query-builder';
-import type { QueryResult, QueryJoin, QueryCondition } from '../types/database';
+import type { QueryResult, QueryJoin, QueryCondition, Table } from '../types/database';
 
 interface QueryBuilderState {
   // Current query state
   currentQuery: QueryBuilderQuery;
+  
+  // Available tables (for foreign key detection)
+  availableTables: Table[];
   
   // Query management
   savedQueries: SavedQuery[];
@@ -54,6 +60,7 @@ interface QueryBuilderState {
   generateSQL: () => string;
   
   // Actions - Table Management
+  setAvailableTables: (tables: Table[]) => void;
   addTable: (tableName: string) => void;
   removeTable: (tableName: string) => void;
   updateTablePosition: (tableName: string, position: Position) => void;
@@ -98,7 +105,9 @@ interface QueryBuilderState {
 
 const defaultQuery: QueryBuilderQuery = {
   selectedTables: [],
+  tableAliases: [],
   selectedColumns: [],
+  selectAllColumns: true, // Default to SELECT *
   joins: [],
   conditions: [],
   groupBy: [],
@@ -124,6 +133,7 @@ export const useQueryBuilderStore = create<QueryBuilderState>()(
   immer((set, get) => ({
     // Initial state
     currentQuery: { ...defaultQuery },
+    availableTables: [],
     savedQueries: [],
     queryTemplates: [],
     activeTab: 'builder',
@@ -278,9 +288,56 @@ export const useQueryBuilderStore = create<QueryBuilderState>()(
     },
 
     // Table Management Actions
+    setAvailableTables: (tables) => set((state) => {
+      state.availableTables = tables;
+    }),
+
     addTable: (tableName) => set((state) => {
       if (!state.currentQuery.selectedTables.includes(tableName)) {
+        // Set as primary table if it's the first one
+        if (state.currentQuery.selectedTables.length === 0) {
+          state.currentQuery.primaryTable = tableName;
+        }
+        
         state.currentQuery.selectedTables.push(tableName);
+        
+        // Regenerate aliases for all tables
+        state.currentQuery.tableAliases = generateTableAliases(state.currentQuery.selectedTables);
+        
+        // Auto-generate LEFT JOIN if this is not the primary table
+        if (state.currentQuery.primaryTable && state.currentQuery.primaryTable !== tableName) {
+          const relationship = findForeignKeyBetweenTables(
+            state.availableTables,
+            state.currentQuery.primaryTable,
+            tableName
+          );
+          
+          if (relationship) {
+            // Check if JOIN already exists
+            const existingJoin = state.currentQuery.joins.find(
+              join => join.table === tableName
+            );
+            
+            if (!existingJoin) {
+              // Use aliases in JOIN conditions
+              const fromAlias = getAliasForTable(state.currentQuery.tableAliases, relationship.fromTable);
+              const toAlias = getAliasForTable(state.currentQuery.tableAliases, relationship.toTable);
+              
+              const newJoin: QueryJoin = {
+                type: 'LEFT',
+                table: tableName,
+                on: {
+                  leftColumn: `${fromAlias}.${relationship.fromColumn}`,
+                  rightColumn: `${toAlias}.${relationship.toColumn}`
+                }
+              };
+              
+              state.currentQuery.joins.push(newJoin);
+              
+              console.log(`🔗 Auto-generated LEFT JOIN: ${fromAlias}.${relationship.fromColumn} = ${toAlias}.${relationship.toColumn} (confidence: ${Math.round(relationship.confidence * 100)}%)`);
+            }
+          }
+        }
         
         // Add table to canvas with auto-positioning
         const existingPositions = state.canvas.tables.map(t => t.position);
@@ -298,6 +355,14 @@ export const useQueryBuilderStore = create<QueryBuilderState>()(
       // Remove from selected tables
       state.currentQuery.selectedTables = state.currentQuery.selectedTables
         .filter(t => t !== tableName);
+      
+      // Regenerate aliases after removal
+      state.currentQuery.tableAliases = generateTableAliases(state.currentQuery.selectedTables);
+      
+      // Update primary table if we removed it
+      if (state.currentQuery.primaryTable === tableName) {
+        state.currentQuery.primaryTable = state.currentQuery.selectedTables[0] || undefined;
+      }
       
       // Remove related columns
       state.currentQuery.selectedColumns = state.currentQuery.selectedColumns
@@ -329,14 +394,69 @@ export const useQueryBuilderStore = create<QueryBuilderState>()(
 
     // Column Management Actions
     toggleColumn: (column) => set((state) => {
+      // Special handling when SELECT * is active
+      if (state.currentQuery.selectAllColumns) {
+        // First click when using SELECT * - switch to explicit mode and uncheck this column
+        state.currentQuery.selectAllColumns = false;
+        
+        // Build explicit column list with all columns EXCEPT the one being unchecked
+        const allColumns: SelectedColumn[] = [];
+        for (const tableName of state.currentQuery.selectedTables) {
+          const table = state.availableTables.find(t => t.name === tableName);
+          if (table) {
+            for (const col of table.columns) {
+              // Skip the column we're unchecking
+              if (tableName === column.table && col.name === column.column) continue;
+              
+              allColumns.push({
+                table: tableName,
+                column: col.name
+              });
+            }
+          }
+        }
+        
+        state.currentQuery.selectedColumns = allColumns;
+        return; // Exit early
+      }
+      
+      // Normal explicit column mode logic
       const index = state.currentQuery.selectedColumns.findIndex(
         c => c.table === column.table && c.column === column.column
       );
       
       if (index >= 0) {
+        // Unchecking a column in explicit mode
         state.currentQuery.selectedColumns.splice(index, 1);
       } else {
+        // Checking a column in explicit mode
         state.currentQuery.selectedColumns.push(column);
+        
+        // Check if we now have all columns selected - if so, switch back to SELECT *
+        const allPossibleColumns: SelectedColumn[] = [];
+        for (const tableName of state.currentQuery.selectedTables) {
+          const table = state.availableTables.find(t => t.name === tableName);
+          if (table) {
+            for (const col of table.columns) {
+              allPossibleColumns.push({
+                table: tableName,
+                column: col.name
+              });
+            }
+          }
+        }
+        
+        // Check if we have all columns
+        const hasAllColumns = allPossibleColumns.every(possibleCol =>
+          state.currentQuery.selectedColumns.some(selectedCol =>
+            selectedCol.table === possibleCol.table && selectedCol.column === possibleCol.column
+          )
+        );
+        
+        if (hasAllColumns && allPossibleColumns.length > 0) {
+          state.currentQuery.selectAllColumns = true;
+          state.currentQuery.selectedColumns = []; // Clear explicit columns when using *
+        }
       }
     }),
 
@@ -506,33 +626,37 @@ export const useQueryBuilderStore = create<QueryBuilderState>()(
 function generateSQLFromQuery(query: QueryBuilderQuery): string {
   const parts: string[] = [];
   
-  // SELECT clause
-  if (query.selectedColumns.length === 0) {
+  // SELECT clause with aliases
+  if (query.selectAllColumns || query.selectedColumns.length === 0) {
     parts.push('SELECT *');
   } else {
     const columns = query.selectedColumns.map(col => {
-      const fullColumn = `${col.table}.${col.column}`;
+      const tableAlias = getAliasForTable(query.tableAliases, col.table);
+      const fullColumn = `${tableAlias}.${col.column}`;
       return col.alias ? `${fullColumn} AS ${col.alias}` : fullColumn;
     });
     parts.push(`SELECT ${columns.join(', ')}`);
   }
   
-  // FROM clause
+  // FROM clause with aliases
   if (query.selectedTables.length > 0) {
-    parts.push(`FROM ${query.selectedTables[0]}`);
+    const primaryTableAlias = getAliasForTable(query.tableAliases, query.selectedTables[0]);
+    const primaryTableName = query.selectedTables[0];
+    parts.push(`FROM ${primaryTableName} ${primaryTableAlias}`);
     
-    // JOIN clauses
+    // JOIN clauses with aliases
     query.joins.forEach(join => {
+      const joinTableAlias = getAliasForTable(query.tableAliases, join.table);
       parts.push(
-        `${join.type} JOIN ${join.table} ON ${join.on.leftColumn} = ${join.on.rightColumn}`
+        `${join.type} JOIN ${join.table} ${joinTableAlias} ON ${join.on.leftColumn} = ${join.on.rightColumn}`
       );
     });
   }
   
-  // WHERE clause
+  // WHERE clause (conditions already use aliases from JoinBuilder/ConditionBuilder)
   if (query.conditions.length > 0) {
     const whereConditions = query.conditions.map((condition, index) => {
-      let conditionStr = formatCondition(condition);
+      let conditionStr = formatCondition(condition, query.tableAliases);
       if (index > 0 && condition.logicalOperator) {
         conditionStr = `${condition.logicalOperator} ${conditionStr}`;
       }
@@ -566,29 +690,37 @@ function generateSQLFromQuery(query: QueryBuilderQuery): string {
 }
 
 // Helper function to format individual conditions
-function formatCondition(condition: QueryCondition): string {
+function formatCondition(condition: QueryCondition, tableAliases: TableAlias[]): string {
   const { column, operator, value } = condition;
+  
+  // Convert column reference to use aliases if it contains a table prefix
+  let formattedColumn = column;
+  if (column.includes('.')) {
+    const [tableName, columnName] = column.split('.');
+    const alias = getAliasForTable(tableAliases, tableName);
+    formattedColumn = `${alias}.${columnName}`;
+  }
   
   switch (operator) {
     case 'equals':
-      return `${column} = '${value}'`;
+      return `${formattedColumn} = '${value}'`;
     case 'not_equals':
-      return `${column} != '${value}'`;
+      return `${formattedColumn} != '${value}'`;
     case 'greater_than':
-      return `${column} > ${value}`;
+      return `${formattedColumn} > ${value}`;
     case 'less_than':
-      return `${column} < ${value}`;
+      return `${formattedColumn} < ${value}`;
     case 'like':
-      return `${column} LIKE '%${value}%'`;
+      return `${formattedColumn} LIKE '%${value}%'`;
     case 'in':
       const values = Array.isArray(value) ? value : [value];
-      return `${column} IN (${values.map(v => `'${v}'`).join(', ')})`;
+      return `${formattedColumn} IN (${values.map(v => `'${v}'`).join(', ')})`;
     case 'is_null':
-      return `${column} IS NULL`;
+      return `${formattedColumn} IS NULL`;
     case 'is_not_null':
-      return `${column} IS NOT NULL`;
+      return `${formattedColumn} IS NOT NULL`;
     default:
-      return `${column} = '${value}'`;
+      return `${formattedColumn} = '${value}'`;
   }
 }
 

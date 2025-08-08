@@ -13,13 +13,16 @@ interface TableSelectorProps {
 
 export const TableSelector: React.FC<TableSelectorProps> = ({
   tables,
-  selectedTables,
+  selectedTables: _propSelectedTables,
   mode
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedTables, setExpandedTables] = useState<Set<string>>(new Set());
   
-  const { addTable, removeTable } = useQueryBuilderStore();
+  const { addTable, removeTable, currentQuery } = useQueryBuilderStore();
+  
+  // Use the live state from the store instead of props to ensure reactivity
+  const selectedTables = currentQuery.selectedTables;
 
   const filteredTables = useMemo(() => {
     return tables.filter(table =>
@@ -101,6 +104,8 @@ export const TableSelector: React.FC<TableSelectorProps> = ({
               const isSelected = selectedTables.includes(table.name);
               const isExpanded = expandedTables.has(table.name);
 
+              const isPrimary = currentQuery.primaryTable === table.name;
+
               return (
                 <div key={table.name} className="group">
                   {/* Table Row */}
@@ -108,7 +113,9 @@ export const TableSelector: React.FC<TableSelectorProps> = ({
                     className={cn(
                       "flex items-center justify-between p-2 rounded-md cursor-pointer transition-colors",
                       isSelected
-                        ? "bg-primary/10 text-primary"
+                        ? isPrimary 
+                          ? "bg-green-100 text-green-800 border border-green-300"
+                          : "bg-primary/10 text-primary"
                         : "hover:bg-muted"
                     )}
                     onClick={() => handleTableToggle(table.name)}
@@ -116,20 +123,32 @@ export const TableSelector: React.FC<TableSelectorProps> = ({
                     <div className="flex items-center space-x-2 min-w-0">
                       <div
                         className={cn(
-                          "w-4 h-4 rounded border-2 flex items-center justify-center",
+                          "w-4 h-4 rounded border-2 flex items-center justify-center transition-colors",
                           isSelected
-                            ? "bg-primary border-primary"
-                            : "border-muted-foreground"
+                            ? "bg-blue-600 border-blue-600"
+                            : "bg-white border-gray-300 hover:border-gray-400"
                         )}
                       >
                         {isSelected && (
-                          <div className="w-2 h-2 bg-white rounded-sm" />
+                          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
                         )}
                       </div>
                       
                       <div className="min-w-0">
-                        <div className="font-medium text-sm truncate">
-                          {table.name}
+                        <div className="font-medium text-sm truncate flex items-center space-x-1">
+                          <span>{table.name}</span>
+                          {isSelected && currentQuery.tableAliases.length > 0 && (
+                            <span className="px-1.5 py-0.5 text-xs bg-gray-200 text-gray-700 rounded font-mono">
+                              {currentQuery.tableAliases.find(ta => ta.tableName === table.name)?.alias}
+                            </span>
+                          )}
+                          {isPrimary && (
+                            <span className="px-1.5 py-0.5 text-xs bg-green-200 text-green-800 rounded font-medium">
+                              PRIMARY
+                            </span>
+                          )}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           {table.rowCount.toLocaleString()} rows • {table.columns.length} columns
